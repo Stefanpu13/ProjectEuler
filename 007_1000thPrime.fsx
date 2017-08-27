@@ -55,5 +55,5 @@ let isPrime3 n =
 
 
 // #time
-getNthPrime 500001
-getNthPrime2 500001
+getNthPrime 140001
+getNthPrime2 130001
