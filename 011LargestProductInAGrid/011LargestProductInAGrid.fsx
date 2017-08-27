@@ -5,29 +5,10 @@ open System.IO
 
 let getGridFromFile file = 
     File.ReadLines(file) 
-        |> Seq.map (fun line -> line.Split([|' '|]) |> Array.map int64) 
-        |> Array.ofSeq
+    |> Seq.map (fun line -> line.Split([|' '|]) |> Array.map int64) 
+    |> Array.ofSeq
 
 let grid = getGridFromFile "011LargestProductInAGrid/grid.txt"
-(*
-    1. open and read file
-    2. transform data to appropriate structure
-        2.1 What is appropriate structure? - Matrix (array of arrays)
-    3. apply main algoritm
-
-    Main algoritm:
-    Simpler but related problem? - 
-        find product horizontally, vertically or diagonally.
-        This is same as largest product in a series - 08
-
-
-    Can we restate the problem?
-    Find the largest product of four adjasent nums in:
-    series formed from horizontal, vertical and diagonal lines
-
-    Auxilary problem:
-    construct series for given line  
-*)
 
 let getSeries startPoint nextPoint (matrix: int64 [] []) = 
     let matrixHeight = matrix.Length
@@ -39,15 +20,12 @@ let getSeries startPoint nextPoint (matrix: int64 [] []) =
         | x, y -> getSeries (matrix.[y].[x]::series) (nextPoint (x, y))
 
     getSeries [] startPoint 
-        |> List.rev 
-        |> Array.ofList         
+    |> List.rev 
+    |> Array.ofList         
 
 let getHorizontalLineSeries y = getSeries (0, y) (fun (x,y) -> (x+1, y)) grid
-
 let getVerticalLineSeries x = getSeries (x, 0) (fun (x,y) -> (x, y+1)) grid
-
 let getPrimaryDiagonalSeries point = getSeries point (fun (x,y) -> (x+1, y+1)) grid
-
 let getSecondaryDiagonalSeries point = getSeries point (fun (x,y) -> (x-1, y+1)) grid
 
 let getAllHorizontalLineSeries (matrix: int64 [] []) =    
