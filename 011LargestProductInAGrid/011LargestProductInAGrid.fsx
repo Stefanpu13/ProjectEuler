@@ -52,14 +52,11 @@ let getAllSecondaryDiagonalSeries (matrix: int64 [] []) subseriesLength =
         |> Array.map ((fun x -> (x, 0)) >> getSecondaryDiagonalSeries)     
     Array.concat [seriesBelowSecondaryDiagonal; seriesAboveSecondaryDiagonal]
 
-let largestProductInMatrixSeries series = 
-    Array.map (largestProductInSeries2 4) series
-    |> Array.max
-
 [
     getAllHorizontalLineSeries grid 
     getAllVerticalLineSeries grid
     getAllPrimaryDiagonalSeries grid 4
     getAllSecondaryDiagonalSeries grid 4
 ] 
-|>  List.map largestProductInMatrixSeries |> List.max
+|> Seq.collect (Array.map (largestProductInSeries2 4))
+|> Seq.max
