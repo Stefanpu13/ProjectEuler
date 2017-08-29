@@ -41,9 +41,6 @@ let smallestTriangularWithDivisorsCount primeFactorization minimumDivisorsCount=
 
     smallestTriangular 2L 
 
-// #time
-// smallestTriangularWithDivisorsCount primeFactorization 500
-
 // ---------------------------------------
 (*
     Solution 2
@@ -62,7 +59,7 @@ let smallestTriangularWithDivisorsCount primeFactorization minimumDivisorsCount=
 let tenthPrime = 29
 let firstNinePrimes = getSmallerPrimes tenthPrime
 let bigTriangular = product firstNinePrimes 
-let primesTable = getSmallerPrimes (int(sqrt(float bigTriangular))) |> Seq.map int64 |> List.ofSeq
+let primes = getSmallerPrimes (int(sqrt(float bigTriangular))) |> Seq.map int64 |> List.ofSeq
 
 let smallestTriangularWithDivisorsCount2 primeFactorization possibleFactors minimumDivisorsCount = 
     let rec smallestTriangular n =         
@@ -76,5 +73,6 @@ let smallestTriangularWithDivisorsCount2 primeFactorization possibleFactors mini
 
     smallestTriangular 2L 
 
+// #time
 smallestTriangularWithDivisorsCount primeFactorization 500
-smallestTriangularWithDivisorsCount2 primeFactorization primesTable 500
+smallestTriangularWithDivisorsCount2 primeFactorization primes 500
