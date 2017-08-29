@@ -6,6 +6,6 @@ let pr =
         for c in [335..499] do
             let a = 1000- (b+c)
             if sq c = sq a + sq b
-            then prod  <-  a * b *c
+            then prod  <-  a * b * c
     prod    
         

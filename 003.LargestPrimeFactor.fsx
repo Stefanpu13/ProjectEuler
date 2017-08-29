@@ -17,5 +17,5 @@ let largestPrimeFactor n primes =
 
 
 
-let fastPrimes = getPrimes (int (sqrt(float 600851475143L)) )
+let fastPrimes = getSmallerPrimes (int (sqrt(float 600851475143L)) )
 let largest = largestPrimeFactor 600851475143L (fastPrimes |> Seq.map int64)

@@ -1,11 +1,7 @@
 #load "000Common.fsx"
 open Common.Utils
 
-// #time
-getPrimes 2000000 |> Seq.map int64 |> Seq.sum
-
-
-    
+// #time    
     (* Python soltion
         primes = [2, 3]
         test = 5
