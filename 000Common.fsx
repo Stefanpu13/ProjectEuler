@@ -31,18 +31,16 @@ module Utils =
             
         Seq.skip 2 primesWithZeroAndOne    
 
-    let primeFactorization n = 
-        let primes = getPrimes (int (n/2) )
-        let rec getFactors n primeIndex factors = 
-            let factor = Seq.item primeIndex primes
-            if factor = n 
-            then
-                factor::factors
-            elif n % factor = 0 
-            then 
-                getFactors (n/factor) (primeIndex) (factor::factors)
-            else
-                getFactors n (primeIndex + 1) factors
-        getFactors n 0 []            
+    
+    let primeFactorization n =     
+        let possibleFactors = 2L::[3L..2L..int64(sqrt(float n)) + 1L]
         
-    // primeFactorization  567
+        let rec getFactors currentFactors possibleFactors n =
+            match possibleFactors, n with        
+            | [], x  -> if x > 1L then x::currentFactors else currentFactors
+            | factor::factors, x ->             
+                if n % factor = 0L
+                then getFactors (factor::currentFactors) (factor::factors) (n/factor)
+                else getFactors currentFactors factors n           
+        
+        getFactors [] possibleFactors n    
