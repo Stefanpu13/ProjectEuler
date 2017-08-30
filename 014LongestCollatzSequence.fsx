@@ -31,74 +31,58 @@ let getCollatzSequenseCount n =
 
 // #time
 
-[999999..-1..16] |> List.map int64 
-|> List.map( fun n -> (n, getCollatzSequenseCount n)) 
-|> List.maxBy (fun (n, seqLength) -> seqLength)
+// [999999..-1..16] |> List.map int64 
+// |> List.map( fun n -> (n, getCollatzSequenseCount n)) 
+// |> List.maxBy (fun (n, seqLength) -> seqLength)
 
 (*
     While building collatz seq, keep number of count for current number
-    once the sequence is over, update each number in an array
+    once the sequence is over, update each number in an array, 
+    using a continuation
+    T
 *)
 
 
 let collatzSeq (nums:int []) n = 
-    let rec collatzSeq countCont elemsOutsideOfRangeCount currentN =        
+    let rec collatzSeq countCont currentN =        
         if currentN <= int64 (nums.Length - 1) 
         then
             let arrayEl = nums.[int currentN]
             if arrayEl > 0
             then
-                countCont elemsOutsideOfRangeCount arrayEl
+                countCont (arrayEl + 1)
             else
-                let newCountCont = (fun elemsOutsideOfRange c ->                
-                    nums.[int currentN]<- c + elemsOutsideOfRangeCount
-                    countCont elemsOutsideOfRange (c + 1)
+                let newCountCont = (fun c ->                
+                    nums.[int currentN] <- c 
+                    countCont (c + 1)
                 )
                 match currentN with
-                | 1L -> newCountCont elemsOutsideOfRangeCount 1
+                | 1L -> newCountCont 1
                 | Even -> 
-                    collatzSeq newCountCont (elemsOutsideOfRangeCount) (currentN / 2L)
+                    collatzSeq newCountCont (currentN / 2L)
                 | Odd -> 
-                    collatzSeq newCountCont (elemsOutsideOfRangeCount) (3L * currentN + 1L)                 
+                    collatzSeq newCountCont (3L * currentN + 1L)                 
         else
+            let newCountCont = (fun c ->                                
+                countCont (c + 1)
+            )
             match currentN with            
             | Even -> 
-                collatzSeq countCont (elemsOutsideOfRangeCount + 1) (currentN / 2L)
+                collatzSeq newCountCont (currentN / 2L)
             | Odd -> 
-                collatzSeq countCont (elemsOutsideOfRangeCount + 1) (3L* currentN + 1L)
+                collatzSeq newCountCont (3L* currentN + 1L)
 
-    let contF elemsOutsideOfRangeCount c = 
-         nums.[int n] <- nums.[int n] + elemsOutsideOfRangeCount
 
-    collatzSeq contF 0 n          
-
-// getCollatzSequenseCount 3L
-// getCollatzSequenseCount 10L
-
-(* 
-    let x = 999999L
-    collatzSeq x
-    nums.[int x]
-    getCollatzSequenseCount x
-*)
-// collatzSeq 10L
-// collatzSeq 3L
-//
+    collatzSeq ignore n
 
 let getCollatzMax ()= 
     let nums = Array.init 1000000 (fun i -> 0)
     [999999..-1..16] |> List.map int64 
     |> List.map (collatzSeq nums) |> ignore
-    (*
-        collatzSeq nums 10L
-        collatzSeq nums 3L
-        collatzSeq nums 32L
-        nums.[0..50]
-    *)
 
     (nums |> Array.mapi (fun i  c -> (i, c)) |> Array.maxBy snd, nums)
 
 // #time
 let (max, nums) = getCollatzMax ()
 
-getCollatzSequenseCount 837799L
+getCollatzSequenseCount 3L
