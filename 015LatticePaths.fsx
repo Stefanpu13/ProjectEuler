@@ -29,8 +29,13 @@
 
     ....
     20 (1 + 1*19) -> (2 * 19) 
+
+    1x1 grid -> 2 -> row 2
+    2x2 grid -> 6 -> row 4
+    .................
+    20x20 grid -> ? -> row 40
 *)
 
 
-let comb n k = [1m..k] |> List.fold (fun p i -> ((n + 1m - i) * p) / i) 1m
-comb 6m 2m
+let comb n k =  List.fold (fun p i -> ((n + 1L - i) * p) / i) 1L [1L..k]
+comb 40L 20L

@@ -33,19 +33,11 @@ open Common.Utils
 
 let getTriangular n = (n * (n+1L)) / 2L 
 
-let product l = l |> Seq.reduce (*)
+let product = Seq.reduce (*)
 
-let getUniqueElemsGroupsLengths l = 
-    l 
-    |> List.groupBy id 
-    |> List.map (fun (k, l) -> List.length l)
+let getUniqueElemsGroupsLengths l = l |> List.groupBy id |> List.map (snd >> List.length) 
 
-let possibleDivisorsCount l = 
-    l 
-    |> List.map ((+) 1) 
-    |> product 
-
-
+let possibleDivisorsCount l = l |> List.map ((+) 1) |> product
 
 let smallestTriangularWithDivisorsCount primeFactorization minimumDivisorsCount= 
     let rec smallestTriangular n = 
@@ -69,22 +61,16 @@ let smallestTriangularWithDivisorsCount primeFactorization minimumDivisorsCount=
     But this number is bigger than 2 * 2 * 3 * 3 *...* 19 which also has more thab 500 combinations - 
     [2;2;3;3;5;7;11;13;17;19] |> getUniqueElemsGroupsLengths |> possibleDivisorsCount
     
-    So, the searched number minN < N
-    All primes of N are <= sqrt(N)
-    minN < N => All primes of minN <=sqrt(N)
-
-    So, a table of primes up to sqrt(N) + 1 can be used for prime factorization
+    So, the search number is a product of the first 9 primes, 
 *)
-let tenthPrime = 29
-let firstNinePrimes = getSmallerPrimes tenthPrime
-let bigTriangular = product firstNinePrimes 
-let primes = getSmallerPrimes (int(sqrt(float bigTriangular))) |> Seq.map int64 |> List.ofSeq
+let ningthPrime = 23
+let primes = getSmallerPrimes (ningthPrime + 1) |> Seq.map int64 |> List.ofSeq
 
 let smallestTriangularWithDivisorsCount2 primeFactorization possibleFactors minimumDivisorsCount = 
     let rec smallestTriangular n =         
         let currentTriangular = getTriangular n        
         let uniqueElemsGroupsLengths = 
-            currentTriangular |> (primeFactorization possibleFactors ) |> getUniqueElemsGroupsLengths             
+            currentTriangular |> (primeFactorization possibleFactors) |> getUniqueElemsGroupsLengths             
         let divisorsCount = possibleDivisorsCount uniqueElemsGroupsLengths
         if divisorsCount >= minimumDivisorsCount 
         then currentTriangular
@@ -95,3 +81,4 @@ let smallestTriangularWithDivisorsCount2 primeFactorization possibleFactors mini
 // #time
 smallestTriangularWithDivisorsCount primeFactorization 500
 smallestTriangularWithDivisorsCount2 primeFactorization primes 500
+
