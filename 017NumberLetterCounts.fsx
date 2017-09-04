@@ -73,21 +73,21 @@ let tensNames = function
     
 let hundred = "hundred"
 
-let rec numberToString (res: string) acountedForHundres n  = 
-    let andStr = if acountedForHundres then " " else " and " 
+let rec numberToString (res: string) acountedForHundreds n  = 
+    let andStr = if acountedForHundreds then " " else " and " 
     match n with
-    | thousands when n = 1000 -> "one thousand"
-    | hundreds when n >= 100 -> 
-        let currentRes = digitNames (hundreds / 100)
-        numberToString (currentRes+ " " + "hundred") false (hundreds % 100)
+    | thousand when n = 1000 -> "one thousand"
+    | aboveHundred when n >= 100 -> 
+        let currentRes = digitNames (aboveHundred / 100)
+        numberToString (currentRes+ " " + "hundred") false (aboveHundred % 100)
     | aboveTwenty when n >= 20 ->        
         let currentRes = tensNames (aboveTwenty / 10)
         numberToString (res + andStr + currentRes) true (aboveTwenty % 10)
     | tenToNinteen when n >=10 ->
         let currentRes = tenToNineteenNames tenToNinteen        
         res + andStr + currentRes
-    | onerToNine when n >= 1 ->
-       let currentRes = digitNames onerToNine
+    | oneToNine when n >= 1 ->
+       let currentRes = digitNames oneToNine
        res + andStr + currentRes
     | zero -> res
 

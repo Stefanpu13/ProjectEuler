@@ -6,7 +6,3 @@
 
 
 2I ** 1000 |> string |> Seq.sumBy (string >> int)
-
-for i in [0..1000000000] do  ()
-
-
