@@ -63,8 +63,8 @@ let smallestTriangularWithDivisorsCount primeFactorization minimumDivisorsCount=
     
     So, the search number is a product of the first 9 primes, 
 *)
-let ningthPrime = 23
-let primes = getSmallerPrimes (ningthPrime + 1) |> Seq.map int64 |> List.ofSeq
+let ninthPrime = 23
+let primes = getSmallerPrimes (ninthPrime + 1) |> Seq.map int64 |> List.ofSeq
 
 let smallestTriangularWithDivisorsCount2 primeFactorization possibleFactors minimumDivisorsCount = 
     let rec smallestTriangular n =         

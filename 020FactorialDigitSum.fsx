@@ -7,10 +7,10 @@
     Find the sum of the digits in the number 100!
 *)
 
-open System.Numerics
+// open System.Numerics
 
 let product = List.reduce (*)
-let fact (n: BigInteger) = 
+let fact n = 
     if n = 0I then 1I else product [1I..n] 
 
 fact 100I |> string |> Seq.sumBy (string >> int)
