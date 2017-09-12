@@ -39,22 +39,21 @@ countCoinSums 200 0 [200; 100;50;20;10;5;2;1]
 *)
 
 
-let countCoinSums2 currentSum summards =
-    let memo  = Array2D.init 1001 (Seq.sum summards + 1) (fun x y-> 0)
-    let rec countCoinSums2 currentSum count summards = 
-        match summards with
+let countCoinSums2 s coins =
+    let memo  = Array2D.init (s + 1) (Seq.sum coins + 1) (fun _ _ -> 0)
+    let rec countCoinSums2 s count coins = 
+        match coins with
         |[] -> 0
-        |[x] -> 1
-        |s::rest ->
-            let newSum = currentSum/s             
-            if memo.[newSum, Seq.sum rest] > 0 
-            then memo.[newSum, Seq.sum rest]
+        |[_] -> 1
+        |coin::rest ->                 
+            if memo.[s, Seq.sum rest] > 0 
+            then memo.[s, Seq.sum rest]
             else 
-                memo.[newSum, Seq.sum rest] <-
-                    [0..newSum] 
-                    |> List.sumBy(fun x -> countCoinSums2 (currentSum - x*s) 0 rest)
-                memo.[newSum, Seq.sum rest]                    
-    countCoinSums2 currentSum 0 summards
+                memo.[s, Seq.sum rest] <-
+                    [0..s/coin] 
+                    |> List.sumBy(fun i -> countCoinSums2 (s - coin*i) 0 rest)
+                memo.[s, Seq.sum rest]                    
+    countCoinSums2 s 0 coins
 
-countCoinSums2 200 [200; 100;50;20;10;5;2;1] 
+countCoinSums2 200 [200; 100;50;20;10;5;2;1]
 
