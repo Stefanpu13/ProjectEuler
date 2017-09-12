@@ -11,7 +11,11 @@
 let getProperDivisorsSum n = 
     [2..int(sqrt(float n))] 
     |> List.filter (fun div -> n % div = 0 ) 
-    |> List.sumBy (fun div-> div + n/div ) 
+    |> List.sumBy (fun div-> 
+        if div <> n/div
+        then div + n/div
+        else div
+    ) 
     |> (+) 1
     
 [2..10000] 

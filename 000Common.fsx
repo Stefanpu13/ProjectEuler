@@ -1,7 +1,7 @@
 namespace Common
 open System.Collections
 module Utils =
-    let private bitArrayToSeq (bitArr: BitArray) = seq {            
+    let bitArrayToSeq (bitArr: BitArray) = seq {            
         for i in 0..bitArr.Length - 1 do
             yield bitArr.[i]
     }
