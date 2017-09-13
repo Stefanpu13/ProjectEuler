@@ -23,11 +23,11 @@ let oneToNine2 = set ['1'..'9']
 
 // #time
 seq {
-    for n in [0..99] do
-    for m in [0..9999] do
+    for n in 0..99 do
+    for m in 0..9999 do
         if n * m < 10000
         then yield (n * m, string (n * m) + string n + string m)
 }
-|> Seq.filter (fun (p, s) -> Set.ofSeq s = oneToNine2 )     
+|> Seq.filter (fun (_, s) -> Set.ofSeq s = oneToNine2 )     
 |> Seq.distinctBy fst 
 |> Seq.sumBy fst
