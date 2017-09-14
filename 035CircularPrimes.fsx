@@ -16,31 +16,20 @@ let rotations str =
         seq {
             for i in 0..String.length str - 1 do                         
                 for j in 0..String.length str - 1 do 
-                    yield (j + i) % 3
-            
+                    yield (j + i) % String.length str
         }
-    numIndexes |> Seq.splitInto (String.length str)
+    numIndexes 
+    |> Seq.splitInto (String.length str)
+    |> Seq.map(fun rot -> Seq.fold (fun n x -> n + string str.[x]) "" rot) 
 
-rotations "awe" |> Array.ofSeq
-
-[3..2..1000000] |> List.map (string >> rotations)
-
-[]
-
-0 % 3
-1 % 3
-2 % 3
-
-1 % 3
-2 % 3
-3 % 3
-
-2 % 3
-3 % 3
-4 % 3
-
-
-
-for i in  0..2 do
-for j in 0..2 do
-    printfn "%A" ((j + i) % 3)
+// #time
+let primesToMillion = getSmallerPrimes 1000000 |> Set.ofSeq
+primesToMillion 
+|> Seq.map string
+|> Seq.filter (fun (n:string) -> 
+    ['0';'2';'4';'6';'8';] |> List.forall (fun c -> n.Contains (string c) |> not) 
+)
+|> Seq.map rotations
+|> Seq.filter (fun rots -> Seq.forall (fun rot -> Set.contains (int rot) primesToMillion) rots)
+|> Seq.length
+|> (+) 1
