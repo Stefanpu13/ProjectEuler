@@ -11,14 +11,12 @@
 #load "000Common.fsx"
 open Common.Utils
 
-let rotations str = 
-    let numIndexes = 
-        seq {
-            for i in 0..String.length str - 1 do                         
-                for j in 0..String.length str - 1 do 
-                    yield (j + i) % String.length str
-        }
-    numIndexes 
+let rotations str =     
+    seq {
+        for i in 0..String.length str - 1 do                         
+            for j in 0..String.length str - 1 do 
+                yield (j + i) % String.length str
+    }    
     |> Seq.splitInto (String.length str)
     |> Seq.map(fun rot -> Seq.fold (fun n x -> n + string str.[x]) "" rot) 
 
@@ -27,7 +25,7 @@ let primesToMillion = getSmallerPrimes 1000000 |> Set.ofSeq
 primesToMillion 
 |> Seq.map string
 |> Seq.filter (fun (n:string) -> 
-    ['0';'2';'4';'6';'8';] |> List.forall (fun c -> n.Contains (string c) |> not) 
+    ['0';'2';'4';'6';'8';] |> List.forall (string >> (not << n.Contains)) 
 )
 |> Seq.map rotations
 |> Seq.filter (fun rots -> Seq.forall (fun rot -> Set.contains (int rot) primesToMillion) rots)

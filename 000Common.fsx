@@ -12,8 +12,7 @@ module Utils =
         let a = BitArray(n, true)
         for i in 2..int (sqrt (float n)) do
             if a.[i] 
-            then
-                // for j in i * i..i..n-1 do a.[j] <- false
+            then                
                 let mutable j = i * i
                 while j < n do
                     a.[j] <- false
