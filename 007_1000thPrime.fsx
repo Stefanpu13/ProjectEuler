@@ -5,7 +5,7 @@
 
 let getNthPrime n = 
     let isPrime (primes:int []) num = 
-        let upperBorder = int (sqrt(float num))
+        let upperBorder = int(sqrt(float num))
         let rec isPrime i = 
             if primes.[i] > upperBorder || primes.[i] = 0
             then true
