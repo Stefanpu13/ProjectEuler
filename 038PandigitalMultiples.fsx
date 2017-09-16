@@ -14,16 +14,8 @@
     as the concatenated product of an integer with (1,2, ... , n) where n > 1?
 *)
 
-[1..5] 
-|> List.map (((*) 9) >> string) 
-|> List.reduce (+)
-
 (*
-    For all nums in [1..4444]
-    take first 9 digit number
-    check if it is pandigital 
-    if pandigital getnewPax
-    else continue to next num
+    "10000 * 1" + "10000 * 2"  = has 10 digits, so it is no pandigital 
 *)
 let digits = set ['1'..'9']
 let isPandigital str = Seq.length str = 9 && Set.ofSeq str = digits

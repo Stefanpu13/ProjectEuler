@@ -31,7 +31,6 @@ let getNthPrime n =
 
 // solution 2 - functional
 
-
 let getNthPrime2 n = 
     let isPrime num =
         let upperBound = int (sqrt(float num))

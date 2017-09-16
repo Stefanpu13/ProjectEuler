@@ -19,7 +19,7 @@
     
     So, multiplicants have exacly 5 digits
 *)
-let oneToNine2 = set ['1'..'9']
+let oneToNine = set ['1'..'9']
 
 // #time
 seq {
@@ -28,6 +28,6 @@ seq {
         if n * m < 10000
         then yield (n * m, string (n * m) + string n + string m)
 }
-|> Seq.filter (fun (_, s) -> Set.ofSeq s = oneToNine2 )     
+|> Seq.filter (fun (_, s) -> Set.ofSeq s = oneToNine )     
 |> Seq.distinctBy fst 
 |> Seq.sumBy fst

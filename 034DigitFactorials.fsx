@@ -24,10 +24,12 @@ let sumOfDigitsFactoriels n =
         match tens, n / tens with
         | 1, _ -> sum + digitsFact.[n % 10]
         | _, 0 -> sFact (sum, tens / 10) n
-        | x, _ -> sFact (sum + digitsFact.[(n / x) % 10], x / 10) n
+        | tens, _ -> sFact (sum + digitsFact.[(n / tens) % 10], tens / 10) n
 
     sFact (0, pown 10 (maxPossibleDigits - 1)) n
 
 [3..fact 9 * 8]
 |> List.filter (fun x-> x = sumOfDigitsFactoriels x)
 |> List.sum
+
+
