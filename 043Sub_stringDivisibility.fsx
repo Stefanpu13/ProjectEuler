@@ -43,7 +43,3 @@ let uniqueDigitsNums =
     |> Seq.filter (fun (newNum: string) -> int64 newNum.[0..2] % d = 0L)
 ) uniqueDigitsNums
 |> Seq.sumBy int64 
-
-
-
-
