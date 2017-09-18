@@ -6,25 +6,39 @@
     What is the largest n-digit pandigital prime that exists?
 *)
 
+// Efficient "isPrime" taken from 
+// http://www.fssnip.net/7E/title/Prime-testing
 let isPrime n =
-    n = 2 ||
-    (
-        (n % 2 <> 0) && 
-        [3..2..int(sqrt(float n))]|> List.forall (fun d -> n % d <> 0)
-    )
+    match n with
+    | _ when n > 3 && (n % 2 = 0 || n % 3 = 0) -> false
+    | _ ->
+        let maxDiv = int(sqrt(float n)) + 1
+        let rec f d i = 
+            if d > maxDiv then 
+                true
+            else
+                if n % d = 0 then 
+                    false
+                else
+                    f (d + i) (6 - i)     
+        f 5 2
 
-let rec distribute e = function
-  | [] -> [[e]]
-  | x::xs' as xs -> (e::xs)::[for xs in distribute e xs' -> x::xs]
+// Seems like this algorithm is :
+// https://en.wikipedia.org/wiki/Steinhaus%E2%80%93Johnson%E2%80%93Trotter_algorithm
+let rec insertAtAllPositions e = function
+    | [] -> [[e]]
+    | x::xs' as xs -> (e::xs)::[for xs in insertAtAllPositions e xs' -> x::xs]
 
 let rec permute = function
-  | [] -> [[]]
-  | e::xs -> List.collect (distribute e) (permute xs)
+    | [] -> [[]]
+    | e::xs -> List.collect (insertAtAllPositions e) (permute xs)
 
 // #time
 [7..-1..4] 
 |> List.collect(fun x -> 
-     (permute [1..x]) |> List.map (fun l -> Seq.map string l |> Seq.reduce (+) |> int)
+    [1..x] 
+    |> permute 
+    |> List.map (Seq.map string >> Seq.reduce (+) >> int)
 )
 |> List.filter isPrime
 |> List.max
