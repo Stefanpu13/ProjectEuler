@@ -25,10 +25,13 @@
 *)
 let digits = set ['0'..'9']
 let charsAreUnique (s:string) = set s |> Seq.length = s.Length
-let toString x = if x < 10 then "0" + string x else string x
+let toString d = if d < 10 then "0" + string d else string d
 
-// #time
-let uniqueDigitsNums = 
+let buildPandigitalCandidates x =  
+    Set.difference digits (set x)
+    |> Seq.map(fun d -> string d + x)
+
+let pandigitalCandidates = 
     [0..99] 
     |> Seq.map toString
     |> Seq.filter charsAreUnique
@@ -36,10 +39,7 @@ let uniqueDigitsNums =
 [17L; 13L; 11L; 7L; 5L; 3L;2L; 1L] 
 |> List.fold(fun validNums d -> 
     validNums 
-    |> Seq.collect(fun x ->
-        Set.difference digits (set x)
-        |> Seq.map(fun d -> string d + x)
-    ) 
+    |> Seq.collect buildPandigitalCandidates 
     |> Seq.filter (fun (newNum: string) -> int64 newNum.[0..2] % d = 0L)
-) uniqueDigitsNums
+) pandigitalCandidates
 |> Seq.sumBy int64 
