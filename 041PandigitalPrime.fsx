@@ -6,22 +6,8 @@
     What is the largest n-digit pandigital prime that exists?
 *)
 
-// Efficient "isPrime" taken from 
-// http://www.fssnip.net/7E/title/Prime-testing
-let isPrime n =
-    match n with
-    | _ when n > 3 && (n % 2 = 0 || n % 3 = 0) -> false
-    | _ ->
-        let maxDiv = int(sqrt(float n)) + 1
-        let rec f d i = 
-            if d > maxDiv then 
-                true
-            else
-                if n % d = 0 then 
-                    false
-                else
-                    f (d + i) (6 - i)     
-        f 5 2
+#load "000Common.fsx"
+open Common.Utils
 
 // Seems like this algorithm is :
 // https://en.wikipedia.org/wiki/Steinhaus%E2%80%93Johnson%E2%80%93Trotter_algorithm

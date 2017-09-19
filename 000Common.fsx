@@ -7,7 +7,7 @@ module Utils =
     }
                         
     // Algorithm translated from wikipedia
-
+    let mutable counter = 1
     let getSmallerPrimes n =
         let a = BitArray(n, true)
         for i in 2..int (sqrt (float n)) do
@@ -15,6 +15,7 @@ module Utils =
             then                
                 let mutable j = i * i
                 while j < n do
+                    counter <- counter + 1
                     a.[j] <- false
                     j <- j + i
 
@@ -37,3 +38,21 @@ module Utils =
                 else getFactors currentFactors factors n           
         
         getFactors [] possibleFactors n
+
+    
+    // Efficient "isPrime" taken from 
+    // http://www.fssnip.net/7E/title/Prime-testing
+    let isPrime n =
+        match n with
+        | _ when n > 3 && (n % 2 = 0 || n % 3 = 0) -> false
+        | _ ->
+            let maxDiv = int(sqrt(float n)) + 1
+            let rec f d i = 
+                if d > maxDiv then 
+                    true
+                else
+                    if n % d = 0 then 
+                        false
+                    else
+                        f (d + i) (6 - i)     
+            f 5 2
