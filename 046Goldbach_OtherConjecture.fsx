@@ -23,7 +23,6 @@ let getSquaresToHalf n =
     Seq.initInfinite (fun n ->  n * n)
     |> Seq.takeWhile (fun sq -> sq <= n / 2)
 
-// #time
 Seq.initInfinite (fun n -> 2 *  n + 1)
 |> Seq.filter (not << isPrime)
 |> Seq.find (fun composite ->
