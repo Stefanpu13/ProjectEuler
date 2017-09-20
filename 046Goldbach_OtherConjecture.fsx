@@ -15,19 +15,18 @@
     sum of a prime and twice a square?
 *)
 
+let isPrime  = function
+| 2 -> true
+| n -> Seq.forall (fun d -> n % d <> 0) (2::[3..2..int(sqrt(float n))])
 
-#load "000Common.fsx"
-open Common.Utils
-
-let getSmallerSquares n = 
-    Seq.initInfinite (fun n ->  n *  n)
+let getSquaresToHalf n = 
+    Seq.initInfinite (fun n ->  n * n)
     |> Seq.takeWhile (fun sq -> sq <= n / 2)
 
 // #time
 Seq.initInfinite (fun n -> 2 *  n + 1)
-|> Seq.filter (fun n -> n % 2 <> 0 && not (isPrime n))
-|> Seq.skipWhile (fun composite ->
-    let squares = getSmallerSquares composite    
-    Seq.exists (fun sq -> isPrime ( composite - 2 * sq)) squares
+|> Seq.filter (not << isPrime)
+|> Seq.find (fun composite ->
+    let squaresToHalf = getSquaresToHalf composite    
+    not <| Seq.exists (fun sq -> isPrime ( composite - 2 * sq)) squaresToHalf
 )
-|> Seq.head
