@@ -27,7 +27,6 @@ open Common.Utils
 
     *)
 
-//
 open System.Collections.Generic
 
 let summationOfPrimes (n:int) =
