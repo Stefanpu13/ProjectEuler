@@ -14,36 +14,23 @@ let isPrime  = function
 | n -> Seq.forall (fun d -> n % d <> 0) (2::[3..2..int(sqrt(float n))])
 
 let mutable searched = (0, 0) 
+
 // #time
 [1000..9999]
 |> List.filter isPrime
-|> List.groupBy (fun (x) -> 
-    (string >> Seq.sort >> Seq.toArray >> System.String) x
-)
+|> List.groupBy (string >> Seq.sort >> Seq.toArray >> System.String) 
 |> List.filter (fun (k, s) -> Seq.length s >= 3 && k <> "1478")
 |> List.iter(fun (k, s) -> 
-    let arr = s |> Array.ofList |> Array.indexed    
-    for (i, el) in arr.[0..Array.length arr - 3] do
-        for (j, otherEl) in arr.[i+1..Array.length arr - 1] do
-            let diff = otherEl - el
-            if Array.exists (fun (_, e) -> 
-                e - otherEl = diff
-            ) arr.[j+1..Array.length arr - 1]  then
-                // printfn "%A" (el, diff)
-                searched <- (el, diff)
-                
-
-    // Array.fold(fun st (i, el) ->
-    //     st || Array.fold (fun innerSt (j, innerEl)->
-    //         let diff = innerEl - el
-    //         innerSt ||
-    //         Array.exists (fun (_, e) -> 
-    //             e - innerEl = diff
-    //         ) ar.[j+1..Array.length ar - 1] 
-    //     ) false ar.[i+1..Array.length ar - 1]        
-    // ) false ar.[0..Array.length ar - 3]    
+    let arr = s |> Array.ofList   
+    let len = Array.length arr
+    for i in [0..len - 3] do
+        for j in [i+1..len - 1] do
+            let diff = arr.[j] - arr.[i]
+            let sameDiff e = e - arr.[j] = diff
+            if Array.exists sameDiff arr.[j+1..len - 1] then                
+                searched <- (arr.[i], diff)
 )
 
-[fst searched; fst searched + snd searched; fst searched + (snd searched) * 2]
-|> List.map string
+[0..2] 
+|> List.map ((fun i -> fst searched + (snd searched) * i) >> string)
 |> List.reduce (+)
