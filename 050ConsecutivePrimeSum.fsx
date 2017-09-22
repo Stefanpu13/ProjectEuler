@@ -61,37 +61,32 @@ open Common.Utils
 // ) (21, 953L)
 
 
+let l = 
+    getSmallerPrimes 1000000 
+    |> Array.ofSeq
 
-let sPrimes =     
-    getSmallerPrimes 1000000
-    |> Seq.map int64
-let l = sPrimes |> Array.ofSeq
-    
 let possibleSumPrimesLength =
-    let mutable sumOfPrimes = 0L
+    let mutable sumOfPrimes = 0
     Seq.takeWhile(fun pr -> 
         sumOfPrimes <- pr + sumOfPrimes 
-        sumOfPrimes < 1000000L
-    )  sPrimes
+        sumOfPrimes < 1000000
+    ) l
     |> Seq.length
 
+let startingWithFirstPrime i =     
+    (possibleSumPrimesLength - i), Array.sum l.[i..possibleSumPrimesLength - 1]   
 
-let startingWithFirstPrime = 
-    List.map (fun i ->
-        (possibleSumPrimesLength - i), Array.sum l.[i..possibleSumPrimesLength - 1]
-    )
-
-let endingWithLastPrime =  List.map (fun i ->
-    i, Array.sum l.[0..i]
-)
+let endingWithLastPrime i =  i, Array.sum l.[0..i]
 
 let maxSummardsCountPrime primeGenerator = 
     [0..possibleSumPrimesLength] 
-    |> primeGenerator
-    |> List.filter (snd >> int >> isPrime)
+    |>List.map primeGenerator
+    |> List.filter (snd >> isPrime)
     |> List.maxBy fst
 
-max (maxSummardsCountPrime startingWithFirstPrime) (maxSummardsCountPrime endingWithLastPrime)
+max 
+    (maxSummardsCountPrime startingWithFirstPrime) 
+    (maxSummardsCountPrime endingWithLastPrime)
 
 
 (*
