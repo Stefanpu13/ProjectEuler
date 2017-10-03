@@ -16,4 +16,3 @@ let containsSameDigitsTo6 num =
 
 Seq.initInfinite ((+) 1)
 |> Seq.find containsSameDigitsTo6
-
