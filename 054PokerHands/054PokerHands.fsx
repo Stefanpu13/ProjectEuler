@@ -30,55 +30,13 @@
     How many hands does Player 1 win?
 *)
 
+#load "054Card.fsx"
+open Card.Poker
 open System.IO
 open System
 
-type Suit = Hearts|Diamonds|Clubs|Spades
-type CardValue =  int
-
-type Card = CardValue * Suit
-
-type Hand = Card []
-
-type PokerHand = 
-|HighCard
-|Pair
-|TwoPairs
-|ThreeOfAKind
-|Straight 
-|Flush 
-|FullHouse
-|FourOfAKind
-|StraightFlush
-|RoyalFlush
-
-let splitStr (separator: char []) (str:string) = 
+let splitStr (separator: char []) (str: string) = 
     str.Split(separator, StringSplitOptions.RemoveEmptyEntries)
-
-let getSuit (suitStr:string) = 
-    match suitStr.ToLower() with
-    | "h" -> Hearts
-    | "d" -> Diamonds
-    | "c" -> Clubs
-    | "s" -> Spades
-    | _ -> failwith "Invalid card suit"
-
-let getCardValue (cardValue:string) : CardValue = 
-    match cardValue.ToLower() with
-    | "2" ->  2
-    | "3" ->  3
-    | "4" ->  4
-    | "5" ->  5
-    | "6" ->  6
-    | "7" ->  7
-    | "8" ->  8
-    | "9" ->  9
-    | "t" ->  10
-    | "j" ->  11
-    | "q" ->  12
-    | "k" ->  13
-    | "a" ->  14
-    | _ -> failwith "Invalid card value"
 
 let countUniqueCardsSuits cards = 
     Array.length (Array.countBy snd cards)
@@ -89,19 +47,18 @@ let groupAndSortCardsByValue (cards: Hand) =
     let sortByGroupCountAndCardValue =         
         Array.sortByDescending (fun card -> (snd >> Seq.length) card, fst card) 
 
-    (Array.groupBy fst >> sortByGroupCountAndCardValue) cards
+    (Array.groupBy fst >> sortByGroupCountAndCardValue >> Array.map snd) cards
 
-let cardsGroupsCount (cardsGroups) =     
-    (Array.map (snd >> Seq.length)) cardsGroups
+let cardsGroupsCount cardsGroups =     
+    Array.map (Seq.length) cardsGroups
 let toCard (cardString : string) : Card = 
     (getCardValue (string cardString.[0]), getSuit (string cardString.[1]))
-
-// #time
 
 let uniqueCardValuesHand sortedCards = 
     let suitsCount =  countUniqueCardsSuits sortedCards
     let highCard = Array.maxBy fst sortedCards |> fst
     let lowCard = Array.minBy fst sortedCards |> fst
+
     match suitsCount, (highCard - lowCard), highCard with
     | 1, 4, 14 -> RoyalFlush
     | 1, 4, _ -> StraightFlush
@@ -111,6 +68,7 @@ let uniqueCardValuesHand sortedCards =
 
 let getPokerHand hand =     
     let cardsGroupedByValue = groupAndSortCardsByValue hand    
+
     match cardsGroupsCount cardsGroupedByValue with
     | [|2;1;1;1;|] -> Pair, cardsGroupedByValue
     | [|2;2;1|] -> TwoPairs, cardsGroupedByValue
@@ -119,47 +77,18 @@ let getPokerHand hand =
     | [|4;1;|] -> FourOfAKind, cardsGroupedByValue
     | _ -> uniqueCardValuesHand hand, cardsGroupedByValue
 
-let playerOneWins (pl1Hand,  pl2Hand) = 
-    getPokerHand pl1Hand > getPokerHand pl2Hand  
-
 let twoPlayersHandsInput = 
     File.ReadAllLines "054PokerHands/054PokerHands.txt"        
     |> Array.map ((splitStr [|' '|]) >> (Array.splitAt 5))
 
 let twoPlayersHands : (Hand * Hand) [] = 
     twoPlayersHandsInput
-    |> Array.map (fun (fisrtPlayCards, secondPlayerCards) -> 
-        Array.map toCard fisrtPlayCards, Array.map toCard secondPlayerCards
+    |> Array.map (fun (player1Hand, player2Hand) -> 
+        Array.map toCard player1Hand, Array.map toCard player2Hand
     )
 
 twoPlayersHands
-|> Array.filter playerOneWins
+|> Array.filter (fun (player1Hand, player2Hand) -> 
+    getPokerHand player1Hand > getPokerHand player2Hand
+)
 |> Seq.length
-
-
-
-
-
-
-
-
-
-
-
-
-let a = getPokerHand (twoPlayersHands.[12] |> fst)
-let b = getPokerHand (twoPlayersHands.[12] |> snd)
-
-a > b
-
-let h1 = Array.map toCard (splitStr [|' '|] "5H 5C 6S 7S KD")
-let h2 = Array.map toCard (splitStr [|' '|] "2C 3S 8S 8D TD")
-
-h1 |> groupAndSortCardsByValue
-h2 |> groupAndSortCardsByValue
-// sort by value count
-let h3 = h2 |> Array.groupBy fst |> Array.sortByDescending (snd >> Seq.length)
-// count by value
-h3 |> Array.map (snd >> Seq.length) 
-
-getPokerHand h1 > getPokerHand h2

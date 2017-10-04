@@ -229,4 +229,3 @@ remainingNumbersPossiblePos
 |> Seq.skipWhile (not << (numberIsPartOfPrimeGroup 8))
 |> Seq.head 
 |> formNumber
-
