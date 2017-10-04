@@ -35,26 +35,70 @@ open Card.Poker
 open System.IO
 open System
 
-let splitStr (separator: char []) (str: string) = 
+type Suit = Hearts|Diamonds|Clubs|Spades
+type CardValue =  int
+
+type Card = CardValue * Suit
+
+type Hand = Hand of Card []
+
+type PokerHand = 
+|HighCard
+|Pair
+|TwoPairs
+|ThreeOfAKind
+|Straight 
+|Flush 
+|FullHouse
+|FourOfAKind
+|StraightFlush
+|RoyalFlush
+
+let splitStr (separator: char []) (str:string) = 
     str.Split(separator, StringSplitOptions.RemoveEmptyEntries)
+
+let getSuit suitStr = 
+    match suitStr with
+    | 'H' -> Hearts
+    | 'D' -> Diamonds
+    | 'C' -> Clubs
+    | 'S' -> Spades
+    | _ -> failwith "Invalid card suit"
+
+let getCardValue cardValue : CardValue = 
+    match cardValue with
+    | '2' ->  2
+    | '3' ->  3
+    | '4' ->  4
+    | '5' ->  5
+    | '6' ->  6
+    | '7' ->  7
+    | '8' ->  8
+    | '9' ->  9
+    | 'T' ->  10
+    | 'J' ->  11
+    | 'Q' ->  12
+    | 'K' ->  13
+    | 'A' ->  14
+    | _ -> failwith "Invalid card value"
 
 let countUniqueCardsSuits cards = 
     Array.length (Array.countBy snd cards)
 
-let groupAndSortCardsByValue (cards: Hand) = 
-    // Will sort by group length and, if same group lengths, 
-    // will sort by card value
-    let sortByGroupCountAndCardValue =         
-        Array.sortByDescending (fun card -> (snd >> Seq.length) card, fst card) 
+let groupAndSortCardsByValue (Hand cards) =     
+    let sortByGroupLengthAndCardValue =         
+        Array.sortByDescending (fun card -> (snd >> Seq.length) card, fst card)
 
-    (Array.groupBy fst >> sortByGroupCountAndCardValue >> Array.map snd) cards
+    cards
+    |> Array.groupBy fst
+    |> sortByGroupLengthAndCardValue
+    |> Array.map snd    
 
-let cardsGroupsCount cardsGroups =     
-    Array.map (Seq.length) cardsGroups
+let cardsGroupsLengths = Array.map Seq.length 
 let toCard (cardString : string) : Card = 
-    (getCardValue (string cardString.[0]), getSuit (string cardString.[1]))
+    (getCardValue cardString.[0], getSuit cardString.[1])
 
-let uniqueCardValuesHand sortedCards = 
+let uniqueCardValuesHand (Hand sortedCards) = 
     let suitsCount =  countUniqueCardsSuits sortedCards
     let highCard = Array.maxBy fst sortedCards |> fst
     let lowCard = Array.minBy fst sortedCards |> fst
@@ -68,8 +112,7 @@ let uniqueCardValuesHand sortedCards =
 
 let getPokerHand hand =     
     let cardsGroupedByValue = groupAndSortCardsByValue hand    
-
-    match cardsGroupsCount cardsGroupedByValue with
+    match cardsGroupsLengths cardsGroupedByValue with
     | [|2;1;1;1;|] -> Pair, cardsGroupedByValue
     | [|2;2;1|] -> TwoPairs, cardsGroupedByValue
     | [|3;1;1;|] -> ThreeOfAKind, cardsGroupedByValue
@@ -83,8 +126,9 @@ let twoPlayersHandsInput =
 
 let twoPlayersHands : (Hand * Hand) [] = 
     twoPlayersHandsInput
-    |> Array.map (fun (player1Hand, player2Hand) -> 
-        Array.map toCard player1Hand, Array.map toCard player2Hand
+    |> Array.map (fun (fisrtPlayCards, secondPlayerCards) -> 
+        Hand (Array.map toCard fisrtPlayCards), 
+        Hand (Array.map toCard secondPlayerCards)
     )
 
 twoPlayersHands
@@ -92,3 +136,5 @@ twoPlayersHands
     getPokerHand player1Hand > getPokerHand player2Hand
 )
 |> Seq.length
+
+getPokerHand (fst twoPlayersHands.[11])
