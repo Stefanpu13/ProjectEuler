@@ -92,7 +92,7 @@ let groupAndSortCardsByValue (Hand cards) =
     |> sortByGroupLengthAndCardValue
     |> Array.map snd    
 
-let cardsGroupsCount = Array.map Seq.length 
+let cardsGroupsLengths = Array.map Seq.length 
 let toCard (cardString : string) : Card = 
     (getCardValue cardString.[0], getSuit cardString.[1])
 
@@ -109,7 +109,7 @@ let uniqueCardValuesHand (Hand sortedCards) =
 
 let getPokerHand hand =     
     let cardsGroupedByValue = groupAndSortCardsByValue hand    
-    match cardsGroupsCount cardsGroupedByValue with
+    match cardsGroupsLengths cardsGroupedByValue with
     | [|2;1;1;1;|] -> Pair, cardsGroupedByValue
     | [|2;2;1|] -> TwoPairs, cardsGroupedByValue
     | [|3;1;1;|] -> ThreeOfAKind, cardsGroupedByValue
