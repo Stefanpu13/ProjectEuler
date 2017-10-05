@@ -41,18 +41,16 @@ let splitStr (separator: char []) (str: string) =
 let countUniqueCardsSuits cards = 
     Array.length (Array.countBy snd cards)
 
-let groupAndSortCardsByValue (cards: Hand) = 
-    // Will sort by group length and, if same group lengths, 
-    // will sort by card value
-    let sortByGroupCountAndCardValue =         
-        Array.sortByDescending (fun card -> (snd >> Seq.length) card, fst card) 
+let groupAndSortCardsByValue (Hand cards) =     
+    let sortByGroupLengthAndCardValue =         
+        Array.sortByDescending (fun card -> (snd >> Seq.length) card, fst card)
 
     (Array.groupBy fst >> sortByGroupCountAndCardValue >> Array.map snd) cards
 
 let cardsGroupsCount cardsGroups =     
     Array.map (Seq.length) cardsGroups
 let toCard (cardString : string) : Card = 
-    (getCardValue (string cardString.[0]), getSuit (string cardString.[1]))
+    (getCardValue cardString.[0], getSuit cardString.[1])
 
 let uniqueCardValuesHand sortedCards = 
     let suitsCount =  countUniqueCardsSuits sortedCards
