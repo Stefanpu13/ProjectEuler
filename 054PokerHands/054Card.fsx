@@ -10,7 +10,7 @@ module Poker =
 
     type Card = CardValue * Suit
 
-    type Hand = Card []
+    type Hand = Hand of Card []
 
     type PokerHand = 
     |HighCard
@@ -24,27 +24,27 @@ module Poker =
     |StraightFlush
     |RoyalFlush
 
-    let getSuit (suitStr:string) = 
-        match suitStr.ToLower() with
-        | "h" -> Hearts
-        | "d" -> Diamonds
-        | "c" -> Clubs
-        | "s" -> Spades
+    let getSuit suitStr = 
+        match suitStr with
+        | 'H' -> Hearts
+        | 'D'-> Diamonds
+        | 'C' -> Clubs
+        | 'S' -> Spades
         | _ -> failwith "Invalid card suit"
 
-    let getCardValue (cardValue:string) : CardValue = 
-        match cardValue.ToLower() with
-        | "2" ->  2
-        | "3" ->  3
-        | "4" ->  4
-        | "5" ->  5
-        | "6" ->  6
-        | "7" ->  7
-        | "8" ->  8
-        | "9" ->  9
-        | "t" ->  10
-        | "j" ->  11
-        | "q" ->  12
-        | "k" ->  13
-        | "a" ->  14
+    let getCardValue cardValue : CardValue = 
+        match cardValue with
+        | '2' ->  2
+        | '3' ->  3
+        | '4' ->  4
+        | '5' ->  5
+        | '6' ->  6
+        | '7' ->  7
+        | '8' ->  8
+        | '9' ->  9
+        | 'T' ->  10
+        | 'J' ->  11
+        | 'Q' ->  12
+        | 'K' ->  13
+        | 'A' ->  14
         | _ -> failwith "Invalid card value"

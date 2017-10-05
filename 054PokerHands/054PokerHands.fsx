@@ -45,14 +45,14 @@ let groupAndSortCardsByValue (Hand cards) =
     let sortByGroupLengthAndCardValue =         
         Array.sortByDescending (fun card -> (snd >> Seq.length) card, fst card)
 
-    (Array.groupBy fst >> sortByGroupCountAndCardValue >> Array.map snd) cards
+    (Array.groupBy fst >> sortByGroupLengthAndCardValue >> Array.map snd) cards
 
 let cardsGroupsCount cardsGroups =     
     Array.map (Seq.length) cardsGroups
 let toCard (cardString : string) : Card = 
     (getCardValue cardString.[0], getSuit cardString.[1])
 
-let uniqueCardValuesHand sortedCards = 
+let uniqueCardValuesHand (Hand sortedCards) = 
     let suitsCount =  countUniqueCardsSuits sortedCards
     let highCard = Array.maxBy fst sortedCards |> fst
     let lowCard = Array.minBy fst sortedCards |> fst
@@ -82,7 +82,7 @@ let twoPlayersHandsInput =
 let twoPlayersHands : (Hand * Hand) [] = 
     twoPlayersHandsInput
     |> Array.map (fun (player1Hand, player2Hand) -> 
-        Array.map toCard player1Hand, Array.map toCard player2Hand
+        Hand (Array.map toCard player1Hand), Hand (Array.map toCard player2Hand)
     )
 
 twoPlayersHands
