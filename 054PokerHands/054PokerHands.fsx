@@ -48,7 +48,7 @@ let groupAndSortCardsByValue (Hand cards) =
     (Array.groupBy fst >> sortByGroupLengthAndCardValue >> Array.map snd) cards
 
 let cardsGroupsCount cardsGroups =     
-    Array.map (Seq.length) cardsGroups
+    Array.map Seq.length cardsGroups
 let toCard (cardString : string) : Card = 
     (getCardValue cardString.[0], getSuit cardString.[1])
 
