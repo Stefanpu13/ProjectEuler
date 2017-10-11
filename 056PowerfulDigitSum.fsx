@@ -19,9 +19,3 @@ seq {
 }
 |> Seq.map (BigInteger.Pow >> sumDigits)
 |> Seq.max
-
-
-let arr1 = [|1;2|]
-let arr2 = arr1
-
-arr2.[0] <- 0
